@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
@@ -23,6 +24,97 @@ type HistoryQueryResult struct {
 	TxId      string        `json:"txId"`
 	Timestamp time.Time     `json:"timestamp"`
 	IsDelete  bool          `json:"isDelete"`
+}
+
+type X509Data struct {
+	ClientName         string `json:"clientName"`
+	OrganizationalUnit string `json:"organizationalUnit"`
+	Organization       string `json:"organization"`
+	Location           string `json:"location"`
+	State              string `json:"state"`
+	Country            string `json:"country"`
+}
+
+/*
+ * -----------------------------------
+ * CLIENT Getters
+ * -----------------------------------
+ */
+
+// GetClientID returns the ID info of the user that's invoking the smart contract
+func (c *StvgdContract) GetClientID(ctx contractapi.TransactionContextInterface) (string, error) {
+
+	clientID, err := getSubmittingClientIdentity(ctx)
+	if err != nil {
+		return "", fmt.Errorf("could not get client ID: %w", err)
+	}
+
+	// Split the client attributes by commas
+	pairs := strings.Split(clientID, ",")
+
+	data := X509Data{}
+
+	// Iterate over each key-value pair
+	for _, pair := range pairs {
+		// Split the key-value pair by the "=" symbol
+		keyValue := strings.Split(pair, "=")
+
+		// Extract the key and value
+		key := keyValue[0]
+		value := keyValue[1]
+
+		// Assign the value to the corresponding field in the struct
+		switch key {
+		case "x509::CN":
+			data.ClientName = value
+		case "OU":
+			data.OrganizationalUnit = value[:len(value)-4]
+		case "O":
+			data.Organization = value
+		case "L":
+			data.Location = value
+		case "ST":
+			data.State = value
+		case "C":
+			data.Country = value
+		}
+	}
+
+	// Convert the struct to a JSON object
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return "", fmt.Errorf("could not marshal X509 data to JSON: %w", err)
+	}
+
+	return string(jsonData), nil
+}
+
+// GetClientCertificate returns the x509 certificate of the user that's invoking the smart contract
+func (c *StvgdContract) GetClientCertificate(ctx contractapi.TransactionContextInterface) (string, error) {
+
+	clientCert, err := ctx.GetClientIdentity().GetX509Certificate()
+	if err != nil {
+		return "", fmt.Errorf("could not get client certificate: %w", err)
+	}
+
+	// Convert the certificate to JSON
+	certJSON, err := json.Marshal(clientCert)
+	if err != nil {
+		return "", fmt.Errorf("could not parse client certificate: %w", err)
+	}
+
+	return string(certJSON), nil
+}
+
+// GetClientCompanyMSP returns the MSP ID of the user's company that's invoking the smart contract
+func (c *StvgdContract) GetClientCompanyMSP(ctx contractapi.TransactionContextInterface) (string, error) {
+
+	mspID, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return "", fmt.Errorf("could not get client's company MSP ID: %w", err)
+	}
+
+	return mspID, nil
 }
 
 /*
@@ -86,48 +178,6 @@ func iterate(data interface{}) interface{} {
 	}
 }
 
-/*
-func iterate(data interface{}, field string) interface{} {
-
-	// reads value of input data
-	d := reflect.ValueOf(data)
-
-	// based on kind
-	switch reflect.ValueOf(data).Kind() {
-	case reflect.Slice: // if slice
-
-		returnSlice := make([]interface{}, d.Len())
-
-		// iterate through slice
-		for i := 0; i < d.Len(); i++ {
-
-			// calls iterate on slice's first element tracebility[0]
-			returnSlice[i] = iterate(d.Index(i).Interface(), field)
-		}
-
-		return returnSlice
-
-	case reflect.Map: // if map
-
-		tmpData := make(map[string]interface{})
-
-		// if field is not key in map
-		if d.FieldByName(field).IsZero() {
-
-			// iterate through map keys
-			for _, v := range d.MapKeys() {
-
-				// calls iterate on maps's first key: docType = "t"
-				tmpData[v.String()] = iterate(d.MapIndex(v).Interface(), field)
-			}
-			return tmpData
-		} else {
-			return d.FieldByName(field)
-		}
-	}
-	return data
-}
-*/
 /*
  * -----------------------------------
  - ACTIVITIES Validation

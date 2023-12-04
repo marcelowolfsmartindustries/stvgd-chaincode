@@ -91,9 +91,11 @@ func (c *StvgdContract) CreateRegistration(ctx contractapi.TransactionContextInt
 		LatestOwner:      mspID + ":" + productionUnitInternalID,
 		BatchInternalID:  batchInternalID,
 		SupplierID:       supplierID,
+		IsInTransit:      false,
 		Quantity:         quantity,
 		FinalScore:       finalScore,
 		BatchComposition: batchComposition,
+		Traceability:     []interface{}{},
 	}
 
 	// Validate new batch

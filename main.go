@@ -24,7 +24,7 @@ func main() {
 
 	chaincode, err := contractapi.NewChaincode(stvgdContract)
 	chaincode.Info.Title = "STVgoDigital PPS1 Chaincode"
-	chaincode.Info.Version = "16"
+	chaincode.Info.Version = "17"
 
 	if err != nil {
 		panic("Could not create chaincode from StvgdContract." + err.Error())

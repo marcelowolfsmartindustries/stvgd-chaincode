@@ -166,10 +166,11 @@ func (c *StvgdContract) CreateTransport(ctx contractapi.TransactionContextInterf
 				LatestOwner:      batch.LatestOwner,
 				BatchInternalID:  batch.BatchInternalID,
 				SupplierID:       batch.SupplierID,
-				BatchComposition: batch.BatchComposition,
-				Traceability:     batch.Traceability,
+				IsInTransit:      false,
 				Quantity:         batch.Quantity - quantity,
 				FinalScore:       batch.FinalScore,
+				BatchComposition: batch.BatchComposition,
+				Traceability:     batch.Traceability,
 			}
 
 			// Marshal remaining batch to bytes
