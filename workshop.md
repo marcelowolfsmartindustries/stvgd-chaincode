@@ -184,7 +184,7 @@ O software a instalar deve ser instalado no SO do ambiente de desenvolvimento:
 
 4. Depois de alterar (com a network a correr)
     ```bash
-    fablo chaincodes upgrade stvgd-chaincode {{version}}
+    fablo chaincode upgrade stvgd-chaincode {{version}}
     ```
 5.  Abrir o postman
 
