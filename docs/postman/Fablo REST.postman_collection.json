@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "0e3b2069-0c84-4ebc-97d1-40433f652a36",
+		"_postman_id": "4a1dcb4d-60bb-4ce0-8ade-6d5c83bd3959",
 		"name": "Fablo REST 🖧",
 		"description": "### [_Fablo REST_](https://github.com/fablo-io/fablo-rest) _é uma REST API simples como interface para redes de blockchain Hyperledger Fabric, com as seguintes funcionalidades:_\n\n- autenticar, reautenticar, registar e listar **identities**,\n- descobrir topologia da rede para determinado **channel**,\n- consultar e invocar **chaincode** (com suporte a parâmetros **transient**).\n    \n\nA Fablo REST deverá funcionar com qualquer rede Hyperledger Fabric, no entanto também vem integrada no [Fablo](https://github.com/softwaremill/fablo), uma ferramenta para criar uma rede blockchain Hyperledger Fabric e executá-la num ambiente Docker.\n\n---\n\n## Setup / Pré-requisitos\n\nPara iniciar a Fablo REST no Fablo temos que editar o ficheiro `fablo-config.json` de modo a incluir um container que execute a Fablo REST para determinada **Org**(anização), tal como no JSON seguinte:\n\n``` json\n{\n  \"$schema\": ...,\n  \"global\": {...},\n  \"orgs\": [\n    {\n      \"organization\": {...},\n      \"peer\": {...},\n      \"orderers\": [...],\n      \"ca\": {...},\n      \"tools\": {\n         ➡️ \"fabloRest\": true\n      }\n    },\n    {...}  ],\n  \"channels\": [...],\n  \"chaincodes\": [...]\n}\n\n```\n\nAo iniciarmos a rede podemos conferir se o container da Fablo REST está em funcionamento, verificando a seguinte resposta no terminal de execução:\n\n``` bash\n ✔ Container fablo-rest.<NomeOrg>.<Domínio>.com    Started    <Segundos>.s\n\n```\n\n---\n\n## Pedidos HTTP\n\nPara fazer pedidos HTTP à Fablo REST, precisamos de saber o endereço e porta do container que está a executá-la. Se estivermos a correr a rede localmente, o endereço será `localhost`, caso contrário será o IP pelo qual acedeu ao ambiente de execução. A porta é 8800, incrementando +1 para cada Org definida no `fablo-config.json` (8801, 8802, 8803, etc...). Também podemos encontrar estes dados `.../fablo-target/fabric-docker/docker-compose.yaml` ou inspecionando os containers em execução no Docker.\n\n---",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14379153",
-		"_collection_link": "https://stvgodigital-pps1.postman.co/workspace/STVgoDigital~46032ea4-ff28-4524-a70e-dc38c39c5102/collection/14379153-0e3b2069-0c84-4ebc-97d1-40433f652a36?action=share&source=collection_link&creator=14379153"
+		"_exporter_id": "30298700"
 	},
 	"item": [
 		{
@@ -915,7 +914,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n\t\"method\": \"{{contract}}:CreateRegistration\",\r\n\t\"args\": [\r\n\t\t\"rg-001\",\r\n\t\t\"PU1\",\r\n\t\t\"b-001\",\r\n\t\t\"ORGANIC_COTTON\",\r\n\t\t\"b-001-iid\",\r\n\t\t\"suppl-001\",\r\n\t\t\"100\",\r\n\t\t\"-3\",\r\n\t\t\"{\\\"organic_cotton\\\": 100}\"\r\n\t]\r\n}",
+													"raw": "{\r\n\t\"method\": \"{{contract}}:CreateRegistration\",\r\n\t\"args\": [\r\n\t\t\"rg-001\",\r\n\t\t\"PU1\",\r\n\t\t\"b-001\",\r\n\t\t\"ORGANIC_COTTON\",\r\n\t\t\"b-001-iid\",\r\n\t\t\"suppl-001\",\r\n\t\t\"100\",\r\n\t\t\"-3\",\r\n\t\t\"{\\\"organic_cotton\\\": 50, \\\"polyester\\\": 50}\"\r\n\t]\r\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -2603,10 +2602,10 @@
 													]
 												}
 											},
-											"_postman_previewlanguage": null,
-											"header": null,
+											"_postman_previewlanguage": "Text",
+											"header": [],
 											"cookie": [],
-											"body": null
+											"body": ""
 										}
 									]
 								},
@@ -2910,10 +2909,10 @@
 													]
 												}
 											},
-											"_postman_previewlanguage": null,
-											"header": null,
+											"_postman_previewlanguage": "Text",
+											"header": [],
 											"cookie": [],
-											"body": null
+											"body": ""
 										}
 									]
 								},
@@ -3294,10 +3293,10 @@
 													]
 												}
 											},
-											"_postman_previewlanguage": null,
-											"header": null,
+											"_postman_previewlanguage": "Text",
+											"header": [],
 											"cookie": [],
-											"body": null
+											"body": ""
 										}
 									]
 								},
@@ -3592,10 +3591,10 @@
 													]
 												}
 											},
-											"_postman_previewlanguage": null,
-											"header": null,
+											"_postman_previewlanguage": "Text",
+											"header": [],
 											"cookie": [],
-											"body": null
+											"body": ""
 										}
 									]
 								}
@@ -4023,10 +4022,10 @@
 													]
 												}
 											},
-											"_postman_previewlanguage": null,
-											"header": null,
+											"_postman_previewlanguage": "Text",
+											"header": [],
 											"cookie": [],
-											"body": null
+											"body": ""
 										}
 									]
 								},
@@ -8699,6 +8698,44 @@
 					]
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost"
+		},
+		{
+			"key": "inovafil-port",
+			"value": "8800"
+		},
+		{
+			"key": "channel",
+			"value": "stvgd-channel"
+		},
+		{
+			"key": "chaincode",
+			"value": "stvgd-chaincode"
 		}
 	]
 }
